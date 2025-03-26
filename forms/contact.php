@@ -19,14 +19,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->isSMTP();                                      // Use SMTP
         $mail->Host = 'smtp.gmail.com';                        // Your SMTP server
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
-        $mail->Username = 'whizsolutions010223@gmail.com';    // SMTP username (your email)
-        $mail->Password = 'pgjpejbpfmenmnkc';                 // SMTP password (use App Password if using Gmail 2FA)
+        $mail->Username = 'user your email';    // SMTP username (your email)
+        $mail->Password = 'password';                 // SMTP password (use App Password if using Gmail 2FA)
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;       // Enable SSL encryption
         $mail->Port = 587;                                   // TCP port to connect to
 
         // Recipients
-        $mail->setFrom('whizsolutions010223@gmail.com', $name);  // Sender's email and name
-        $mail->addAddress('krunalkusvaha199@gmail.com');           // Recipient's email
+        $mail->setFrom('from email', $name);  // Sender's email and name
+        $mail->addAddress('to email');           // Recipient's email
 
         // Content
         $mail->isHTML(false);                                        // Set email format to plain text
