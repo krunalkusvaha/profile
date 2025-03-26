@@ -1,4 +1,9 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../vendor/autoload.php'; // PHPMailer ka path set karein
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
     $name = htmlspecialchars($_POST['name']);
@@ -6,30 +11,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $subject = htmlspecialchars($_POST['subject']);
     $message = htmlspecialchars($_POST['message']);
 
-    // Recipient's email address (change it to your email)
-    $to = "krunalkusvaha199@gmail.com"; 
+    // Create instance of PHPMailer
+    $mail = new PHPMailer(true);
 
-    // Subject of the email
-    $email_subject = "New Contact Form Submission: " . $subject;
+    try {
+        // Server settings
+        $mail->isSMTP();                                      // Use SMTP
+        $mail->Host = 'smtp.gmail.com';                        // Your SMTP server
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = 'whizsolutions010223@gmail.com';    // SMTP username (your email)
+        $mail->Password = 'pgjpejbpfmenmnkc';                 // SMTP password (use App Password if using Gmail 2FA)
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;       // Enable SSL encryption
+        $mail->Port = 587;                                   // TCP port to connect to
 
-    // Body of the email
-    $email_body = "You have received a new message from your website contact form.\n\n";
-    $email_body .= "Name: $name\n";
-    $email_body .= "Email: $email\n";
-    $email_body .= "Subject: $subject\n";
-    $email_body .= "Message:\n$message\n";
+        // Recipients
+        $mail->setFrom('whizsolutions010223@gmail.com', $name);  // Sender's email and name
+        $mail->addAddress('krunalkusvaha199@gmail.com');           // Recipient's email
 
-    // Headers for the email
-    $headers = "From: $email\r\n";
-    $headers .= "Reply-To: $email\r\n";
+        // Content
+        $mail->isHTML(false);                                        // Set email format to plain text
+        $mail->Subject = "New Contact Form Submission: " . $subject;
+        $mail->Body    = "You have received a new message from your website contact form.\n\n";
+        $mail->Body    .= "Name: $name\n";
+        $mail->Body    .= "Email: $email\n";
+        $mail->Body    .= "Subject: $subject\n";
+        $mail->Body    .= "Message:\n$message\n";
 
-    // Send the email
-    if (mail($to, $email_subject, $email_body, $headers)) {
-        // Return success response
-        echo "success";
-    } else {
-        // Return error response
-        echo "error";
+        // Send email
+        if ($mail->send()) {
+            echo 'Message has been sent';  // Success message
+        } else {
+            echo 'Message could not be sent.';    // Error message
+        }
+    } catch (Exception $e) {
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 }
 ?>
